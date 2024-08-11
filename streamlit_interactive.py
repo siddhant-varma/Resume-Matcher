@@ -234,8 +234,8 @@ def tokenize_string(input_string):
 def main():
     # Display the main title and sub-headers
     st.title(":blue[Resume Matcher]")
-    
-    #Detail visible in sidebar
+
+    # Detail visible in sidebar
     # with st.sidebar:
     #     st.image("Assets/img/header_image.png")
     #     st.subheader(
@@ -264,7 +264,7 @@ def main():
     with st.container():
         resumeCol, jobDescriptionCol = st.columns(2)
         with resumeCol:
-            #Option for selecting from existing resumes
+            # Option for selecting from existing resumes
 
             output = st.selectbox(
                 f"There are {len(resume_names)} resumes present. Please select one from the menu below:",
@@ -272,17 +272,15 @@ def main():
             )
             avs.add_vertical_space(5)
             update_session_state("resumeUploaded", "Uploaded")
-            save_path_resume = os.path.join(
-                cwd, "Data", "Resumes", output
-            )
+            save_path_resume = os.path.join(cwd, "Data", "Resumes", output)
             print(save_path_resume)
             update_session_state("resumePath", save_path_resume)
 
-            #selected_file = read_json("Data/Processed/Resumes/" + output)
+            # selected_file = read_json("Data/Processed/Resumes/" + output)
 
             avs.add_vertical_space(2)
             uploaded_Resume = True
-            #Option for uploading resume
+            # Option for uploading resume
             uploaded_Resume = st.file_uploader("Choose a Resume", type="pdf")
             if uploaded_Resume is not None:
                 if st.session_state["resumeUploaded"] == "Pending":
@@ -305,24 +303,22 @@ def main():
             #     update_session_state("resumePath", "")
 
         with jobDescriptionCol:
-            #Option for selecting job description from existing ones
+            # Option for selecting job description from existing ones
 
             selectedJobDescription = st.selectbox(
                 f"There are {len(job_descriptions)} job descriptions present. Please select one from the menu below:",
                 job_descriptions,
-            )            
+            )
             avs.add_vertical_space(5)
             update_session_state("jobDescriptionUploaded", "Uploaded")
             save_path_jobDescription = os.path.join(
                 cwd, "Data", "JobDescription", selectedJobDescription
             )
-            update_session_state(
-                "jobDescriptionPath", save_path_jobDescription
-            )
+            update_session_state("jobDescriptionPath", save_path_jobDescription)
 
             avs.add_vertical_space(2)
-            
-            #Option for uploading job description
+
+            # Option for uploading job description
             uploaded_JobDescription = st.file_uploader(
                 "Choose a Job Description", type="pdf"
             )
@@ -353,7 +349,7 @@ def main():
         if (
             # uploaded_Resume is not None and
             st.session_state["resumeUploaded"] == "Uploaded"
-            #and uploaded_JobDescription is not None
+            # and uploaded_JobDescription is not None
             and st.session_state["jobDescriptionUploaded"] == "Uploaded"
         ):
 
@@ -586,8 +582,8 @@ if __name__ == "__main__":
     # print(public_url)
 
     # Cleanup processed resume / job descriptions
-    #delete_from_dir(os.path.join(cwd, "Data", "Processed", "Resumes"))
-    #delete_from_dir(os.path.join(cwd, "Data", "Processed", "JobDescription"))
+    # delete_from_dir(os.path.join(cwd, "Data", "Processed", "Resumes"))
+    # delete_from_dir(os.path.join(cwd, "Data", "Processed", "JobDescription"))
 
     # Set default session states for first run
     if "resumeUploaded" not in st.session_state.keys():
@@ -601,7 +597,7 @@ if __name__ == "__main__":
         main()
     except Exception as e:
         logging.error(traceback.format_exc())
-    #finally:
-        #print("Exiting")
-        # print(" Shutting down Ngrok server.")
-        # ngrok.kill()
+    # finally:
+    # print("Exiting")
+    # print(" Shutting down Ngrok server.")
+    # ngrok.kill()
