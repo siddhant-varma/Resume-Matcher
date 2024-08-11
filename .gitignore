@@ -143,5 +143,9 @@ scripts/similarity/config.yml
 *.local.yml
 
 # Processed or local files
-/Data/Processed/*
+/Data/Processed/Resumes/*
+/Data/Processed/JobDescription/*
+/Data/Resumes/*
+/Data/JobDescription/*
 *.local.pdf
+resume_matcher_colab.ipynb

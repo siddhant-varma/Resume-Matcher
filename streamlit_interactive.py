@@ -13,6 +13,8 @@ from annotated_text import annotated_text, parameters
 from streamlit_extras import add_vertical_space as avs
 from streamlit_extras.badges import badge
 
+#from pyngrok import ngrok
+
 from scripts import JobDescriptionProcessor, ResumeProcessor
 from scripts.parsers import ParseJobDesc, ParseResume
 from scripts.ReadPdf import read_single_pdf
@@ -225,308 +227,327 @@ def tokenize_string(input_string):
     tokens = nltk.word_tokenize(input_string)
     return tokens
 
-
-# Cleanup processed resume / job descriptions
-delete_from_dir(os.path.join(cwd, "Data", "Processed", "Resumes"))
-delete_from_dir(os.path.join(cwd, "Data", "Processed", "JobDescription"))
-
-# Set default session states for first run
-if "resumeUploaded" not in st.session_state.keys():
-    update_session_state("resumeUploaded", "Pending")
-    update_session_state("resumePath", "")
-if "jobDescriptionUploaded" not in st.session_state.keys():
-    update_session_state("jobDescriptionUploaded", "Pending")
-    update_session_state("jobDescriptionPath", "")
-
-# Display the main title and sub-headers
-st.title(":blue[Resume Matcher]")
-with st.sidebar:
-    st.image("Assets/img/header_image.png")
-    st.subheader(
-        "Free and Open Source ATS to help your resume pass the screening stage."
-    )
-    st.markdown(
-        "Check the website [www.resumematcher.fyi](https://www.resumematcher.fyi/)"
-    )
-    st.markdown(
-        "Give Resume Matcher a ⭐ on [GitHub](https://github.com/srbhr/resume-matcher)"
-    )
-    badge(type="github", name="srbhr/Resume-Matcher")
-    st.markdown("For updates follow me on Twitter.")
-    badge(type="twitter", name="_srbhr_")
-    st.markdown(
-        "If you like the project and would like to further help in development please consider 👇"
-    )
-    badge(type="buymeacoffee", name="srbhr")
-
-st.divider()
-avs.add_vertical_space(1)
-
-with st.container():
-    resumeCol, jobDescriptionCol = st.columns(2)
-    with resumeCol:
-        uploaded_Resume = st.file_uploader("Choose a Resume", type="pdf")
-        if uploaded_Resume is not None:
-            if st.session_state["resumeUploaded"] == "Pending":
-                save_path_resume = os.path.join(
-                    cwd, "Data", "Resumes", uploaded_Resume.name
-                )
-
-                with open(save_path_resume, mode="wb") as w:
-                    w.write(uploaded_Resume.getvalue())
-
-                if os.path.exists(save_path_resume):
-                    st.toast(
-                        f"File {uploaded_Resume.name} is successfully saved!", icon="✔️"
-                    )
-                    update_session_state("resumeUploaded", "Uploaded")
-                    update_session_state("resumePath", save_path_resume)
-        else:
-            update_session_state("resumeUploaded", "Pending")
-            update_session_state("resumePath", "")
-
-    with jobDescriptionCol:
-        uploaded_JobDescription = st.file_uploader(
-            "Choose a Job Description", type="pdf"
+#defining main function for execution
+def main():
+    # Display the main title and sub-headers
+    st.title(":blue[Resume Matcher]")
+    with st.sidebar:
+        st.image("Assets/img/header_image.png")
+        st.subheader(
+            "Free and Open Source ATS to help your resume pass the screening stage."
         )
-        if uploaded_JobDescription is not None:
-            if st.session_state["jobDescriptionUploaded"] == "Pending":
-                save_path_jobDescription = os.path.join(
-                    cwd, "Data", "JobDescription", uploaded_JobDescription.name
-                )
-
-                with open(save_path_jobDescription, mode="wb") as w:
-                    w.write(uploaded_JobDescription.getvalue())
-
-                if os.path.exists(save_path_jobDescription):
-                    st.toast(
-                        f"File {uploaded_JobDescription.name} is successfully saved!",
-                        icon="✔️",
-                    )
-                    update_session_state("jobDescriptionUploaded", "Uploaded")
-                    update_session_state("jobDescriptionPath", save_path_jobDescription)
-        else:
-            update_session_state("jobDescriptionUploaded", "Pending")
-            update_session_state("jobDescriptionPath", "")
-
-with st.spinner("Please wait..."):
-    if (
-        uploaded_Resume is not None
-        and st.session_state["jobDescriptionUploaded"] == "Uploaded"
-        and uploaded_JobDescription is not None
-        and st.session_state["jobDescriptionUploaded"] == "Uploaded"
-    ):
-
-        resumeProcessor = ParseResume(read_single_pdf(st.session_state["resumePath"]))
-        jobDescriptionProcessor = ParseJobDesc(
-            read_single_pdf(st.session_state["jobDescriptionPath"])
-        )
-
-        # Resume / JD output
-        selected_file = resumeProcessor.get_JSON()
-        selected_jd = jobDescriptionProcessor.get_JSON()
-
-        # Add containers for each row to avoid overlap
-
-        # Parsed data
-        with st.container():
-            resumeCol, jobDescriptionCol = st.columns(2)
-            with resumeCol:
-                with st.expander("Parsed Resume Data"):
-                    st.caption(
-                        "This text is parsed from your resume. This is how it'll look like after getting parsed by an "
-                        "ATS."
-                    )
-                    st.caption(
-                        "Utilize this to understand how to make your resume ATS friendly."
-                    )
-                    avs.add_vertical_space(3)
-                    st.write(selected_file["clean_data"])
-
-            with jobDescriptionCol:
-                with st.expander("Parsed Job Description"):
-                    st.caption(
-                        "Currently in the pipeline I'm parsing this from PDF but it'll be from txt or copy paste."
-                    )
-                    avs.add_vertical_space(3)
-                    st.write(selected_jd["clean_data"])
-
-        # Extracted keywords
-        with st.container():
-            resumeCol, jobDescriptionCol = st.columns(2)
-            with resumeCol:
-                with st.expander("Extracted Keywords"):
-                    st.write(
-                        "Now let's take a look at the extracted keywords from the resume."
-                    )
-                    annotated_text(
-                        create_annotated_text(
-                            selected_file["clean_data"],
-                            selected_file["extracted_keywords"],
-                            "KW",
-                            "#0B666A",
-                        )
-                    )
-            with jobDescriptionCol:
-                with st.expander("Extracted Keywords"):
-                    st.write(
-                        "Now let's take a look at the extracted keywords from the job description."
-                    )
-                    annotated_text(
-                        create_annotated_text(
-                            selected_jd["clean_data"],
-                            selected_jd["extracted_keywords"],
-                            "KW",
-                            "#0B666A",
-                        )
-                    )
-
-        # Star graph visualization
-        with st.container():
-            resumeCol, jobDescriptionCol = st.columns(2)
-            with resumeCol:
-                with st.expander("Extracted Entities"):
-                    st.write(
-                        "Now let's take a look at the extracted entities from the resume."
-                    )
-
-                    # Call the function with your data
-                    create_star_graph(selected_file["keyterms"], "Entities from Resume")
-            with jobDescriptionCol:
-                with st.expander("Extracted Entities"):
-                    st.write(
-                        "Now let's take a look at the extracted entities from the job description."
-                    )
-
-                    # Call the function with your data
-                    create_star_graph(
-                        selected_jd["keyterms"], "Entities from Job Description"
-                    )
-
-        # Keywords and values
-        with st.container():
-            resumeCol, jobDescriptionCol = st.columns(2)
-            with resumeCol:
-                with st.expander("Keywords & Values"):
-                    df1 = pd.DataFrame(
-                        selected_file["keyterms"], columns=["keyword", "value"]
-                    )
-
-                    # Create the dictionary
-                    keyword_dict = {}
-                    for keyword, value in selected_file["keyterms"]:
-                        keyword_dict[keyword] = value * 100
-
-                    fig = go.Figure(
-                        data=[
-                            go.Table(
-                                header=dict(
-                                    values=["Keyword", "Value"],
-                                    font=dict(size=12, color="white"),
-                                    fill_color="#1d2078",
-                                ),
-                                cells=dict(
-                                    values=[
-                                        list(keyword_dict.keys()),
-                                        list(keyword_dict.values()),
-                                    ],
-                                    line_color="darkslategray",
-                                    fill_color="#6DA9E4",
-                                ),
-                            )
-                        ]
-                    )
-                    st.plotly_chart(fig, use_container_width=True)
-            with jobDescriptionCol:
-                with st.expander("Keywords & Values"):
-                    df2 = pd.DataFrame(
-                        selected_jd["keyterms"], columns=["keyword", "value"]
-                    )
-
-                    # Create the dictionary
-                    keyword_dict = {}
-                    for keyword, value in selected_jd["keyterms"]:
-                        keyword_dict[keyword] = value * 100
-
-                    fig = go.Figure(
-                        data=[
-                            go.Table(
-                                header=dict(
-                                    values=["Keyword", "Value"],
-                                    font=dict(size=12, color="white"),
-                                    fill_color="#1d2078",
-                                ),
-                                cells=dict(
-                                    values=[
-                                        list(keyword_dict.keys()),
-                                        list(keyword_dict.values()),
-                                    ],
-                                    line_color="darkslategray",
-                                    fill_color="#6DA9E4",
-                                ),
-                            )
-                        ]
-                    )
-                    st.plotly_chart(fig, use_container_width=True)
-
-        # Treemaps
-        with st.container():
-            resumeCol, jobDescriptionCol = st.columns(2)
-            with resumeCol:
-                with st.expander("Key Topics"):
-                    fig = px.treemap(
-                        df1,
-                        path=["keyword"],
-                        values="value",
-                        color_continuous_scale="Rainbow",
-                        title="Key Terms/Topics Extracted from your Resume",
-                    )
-                    st.plotly_chart(fig, use_container_width=True)
-
-            with jobDescriptionCol:
-                with st.expander("Key Topics"):
-                    fig = px.treemap(
-                        df2,
-                        path=["keyword"],
-                        values="value",
-                        color_continuous_scale="Rainbow",
-                        title="Key Terms/Topics Extracted from Job Description",
-                    )
-                    st.plotly_chart(fig, use_container_width=True)
-
-        avs.add_vertical_space(2)
-        st.markdown("#### Similarity Score")
-        print("Config file parsed successfully:")
-        resume_string = " ".join(selected_file["extracted_keywords"])
-        jd_string = " ".join(selected_jd["extracted_keywords"])
-        result = get_score(resume_string, jd_string)
-        similarity_score = round(result[0].score * 100, 2)
-
-        # Default color to green
-        score_color = "green"
-        if similarity_score < 60:
-            score_color = "red"
-        elif 60 <= similarity_score < 75:
-            score_color = "orange"
-
         st.markdown(
-            f"Similarity Score obtained for the resume and job description is "
-            f'<span style="color:{score_color};font-size:24px; font-weight:Bold">{similarity_score}</span>',
-            unsafe_allow_html=True,
+            "Check the website [www.resumematcher.fyi](https://www.resumematcher.fyi/)"
         )
+        st.markdown(
+            "Give Resume Matcher a ⭐ on [GitHub](https://github.com/srbhr/resume-matcher)"
+        )
+        badge(type="github", name="srbhr/Resume-Matcher")
+        st.markdown("For updates follow me on Twitter.")
+        badge(type="twitter", name="_srbhr_")
+        st.markdown(
+            "If you like the project and would like to further help in development please consider 👇"
+        )
+        badge(type="buymeacoffee", name="srbhr")
 
-        avs.add_vertical_space(2)
-        with st.expander("Common words between Resume and Job Description:"):
-            annotated_text(
-                create_annotated_text(
-                    selected_file["clean_data"],
-                    selected_jd["extracted_keywords"],
-                    "JD",
-                    "#F24C3D",
-                )
+    st.divider()
+    avs.add_vertical_space(1)
+
+    with st.container():
+        resumeCol, jobDescriptionCol = st.columns(2)
+        with resumeCol:
+            uploaded_Resume = st.file_uploader("Choose a Resume", type="pdf")
+            if uploaded_Resume is not None:
+                if st.session_state["resumeUploaded"] == "Pending":
+                    save_path_resume = os.path.join(
+                        cwd, "Data", "Resumes", uploaded_Resume.name
+                    )
+
+                    with open(save_path_resume, mode="wb") as w:
+                        w.write(uploaded_Resume.getvalue())
+
+                    if os.path.exists(save_path_resume):
+                        st.toast(
+                            f"File {uploaded_Resume.name} is successfully saved!", icon="✔️"
+                        )
+                        update_session_state("resumeUploaded", "Uploaded")
+                        update_session_state("resumePath", save_path_resume)
+            else:
+                update_session_state("resumeUploaded", "Pending")
+                update_session_state("resumePath", "")
+
+        with jobDescriptionCol:
+            uploaded_JobDescription = st.file_uploader(
+                "Choose a Job Description", type="pdf"
+            )
+            if uploaded_JobDescription is not None:
+                if st.session_state["jobDescriptionUploaded"] == "Pending":
+                    save_path_jobDescription = os.path.join(
+                        cwd, "Data", "JobDescription", uploaded_JobDescription.name
+                    )
+
+                    with open(save_path_jobDescription, mode="wb") as w:
+                        w.write(uploaded_JobDescription.getvalue())
+
+                    if os.path.exists(save_path_jobDescription):
+                        st.toast(
+                            f"File {uploaded_JobDescription.name} is successfully saved!",
+                            icon="✔️",
+                        )
+                        update_session_state("jobDescriptionUploaded", "Uploaded")
+                        update_session_state("jobDescriptionPath", save_path_jobDescription)
+            else:
+                update_session_state("jobDescriptionUploaded", "Pending")
+                update_session_state("jobDescriptionPath", "")
+
+    with st.spinner("Please wait..."):
+        if (
+            uploaded_Resume is not None
+            and st.session_state["jobDescriptionUploaded"] == "Uploaded"
+            and uploaded_JobDescription is not None
+            and st.session_state["jobDescriptionUploaded"] == "Uploaded"
+        ):
+
+            resumeProcessor = ParseResume(read_single_pdf(st.session_state["resumePath"]))
+            jobDescriptionProcessor = ParseJobDesc(
+                read_single_pdf(st.session_state["jobDescriptionPath"])
             )
 
-st.divider()
+            # Resume / JD output
+            selected_file = resumeProcessor.get_JSON()
+            selected_jd = jobDescriptionProcessor.get_JSON()
 
-# Go back to top
-st.markdown("[:arrow_up: Back to Top](#resume-matcher)")
+            # Add containers for each row to avoid overlap
+
+            # Parsed data
+            with st.container():
+                resumeCol, jobDescriptionCol = st.columns(2)
+                with resumeCol:
+                    with st.expander("Parsed Resume Data"):
+                        st.caption(
+                            "This text is parsed from your resume. This is how it'll look like after getting parsed by an "
+                            "ATS."
+                        )
+                        st.caption(
+                            "Utilize this to understand how to make your resume ATS friendly."
+                        )
+                        avs.add_vertical_space(3)
+                        st.write(selected_file["clean_data"])
+
+                with jobDescriptionCol:
+                    with st.expander("Parsed Job Description"):
+                        st.caption(
+                            "Currently in the pipeline I'm parsing this from PDF but it'll be from txt or copy paste."
+                        )
+                        avs.add_vertical_space(3)
+                        st.write(selected_jd["clean_data"])
+
+            # Extracted keywords
+            with st.container():
+                resumeCol, jobDescriptionCol = st.columns(2)
+                with resumeCol:
+                    with st.expander("Extracted Keywords"):
+                        st.write(
+                            "Now let's take a look at the extracted keywords from the resume."
+                        )
+                        annotated_text(
+                            create_annotated_text(
+                                selected_file["clean_data"],
+                                selected_file["extracted_keywords"],
+                                "KW",
+                                "#0B666A",
+                            )
+                        )
+                with jobDescriptionCol:
+                    with st.expander("Extracted Keywords"):
+                        st.write(
+                            "Now let's take a look at the extracted keywords from the job description."
+                        )
+                        annotated_text(
+                            create_annotated_text(
+                                selected_jd["clean_data"],
+                                selected_jd["extracted_keywords"],
+                                "KW",
+                                "#0B666A",
+                            )
+                        )
+
+            # Star graph visualization
+            with st.container():
+                resumeCol, jobDescriptionCol = st.columns(2)
+                with resumeCol:
+                    with st.expander("Extracted Entities"):
+                        st.write(
+                            "Now let's take a look at the extracted entities from the resume."
+                        )
+
+                        # Call the function with your data
+                        create_star_graph(selected_file["keyterms"], "Entities from Resume")
+                with jobDescriptionCol:
+                    with st.expander("Extracted Entities"):
+                        st.write(
+                            "Now let's take a look at the extracted entities from the job description."
+                        )
+
+                        # Call the function with your data
+                        create_star_graph(
+                            selected_jd["keyterms"], "Entities from Job Description"
+                        )
+
+            # Keywords and values
+            with st.container():
+                resumeCol, jobDescriptionCol = st.columns(2)
+                with resumeCol:
+                    with st.expander("Keywords & Values"):
+                        df1 = pd.DataFrame(
+                            selected_file["keyterms"], columns=["keyword", "value"]
+                        )
+
+                        # Create the dictionary
+                        keyword_dict = {}
+                        for keyword, value in selected_file["keyterms"]:
+                            keyword_dict[keyword] = value * 100
+
+                        fig = go.Figure(
+                            data=[
+                                go.Table(
+                                    header=dict(
+                                        values=["Keyword", "Value"],
+                                        font=dict(size=12, color="white"),
+                                        fill_color="#1d2078",
+                                    ),
+                                    cells=dict(
+                                        values=[
+                                            list(keyword_dict.keys()),
+                                            list(keyword_dict.values()),
+                                        ],
+                                        line_color="darkslategray",
+                                        fill_color="#6DA9E4",
+                                    ),
+                                )
+                            ]
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+                with jobDescriptionCol:
+                    with st.expander("Keywords & Values"):
+                        df2 = pd.DataFrame(
+                            selected_jd["keyterms"], columns=["keyword", "value"]
+                        )
+
+                        # Create the dictionary
+                        keyword_dict = {}
+                        for keyword, value in selected_jd["keyterms"]:
+                            keyword_dict[keyword] = value * 100
+
+                        fig = go.Figure(
+                            data=[
+                                go.Table(
+                                    header=dict(
+                                        values=["Keyword", "Value"],
+                                        font=dict(size=12, color="white"),
+                                        fill_color="#1d2078",
+                                    ),
+                                    cells=dict(
+                                        values=[
+                                            list(keyword_dict.keys()),
+                                            list(keyword_dict.values()),
+                                        ],
+                                        line_color="darkslategray",
+                                        fill_color="#6DA9E4",
+                                    ),
+                                )
+                            ]
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+
+            # Treemaps
+            with st.container():
+                resumeCol, jobDescriptionCol = st.columns(2)
+                with resumeCol:
+                    with st.expander("Key Topics"):
+                        fig = px.treemap(
+                            df1,
+                            path=["keyword"],
+                            values="value",
+                            color_continuous_scale="Rainbow",
+                            title="Key Terms/Topics Extracted from your Resume",
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+
+                with jobDescriptionCol:
+                    with st.expander("Key Topics"):
+                        fig = px.treemap(
+                            df2,
+                            path=["keyword"],
+                            values="value",
+                            color_continuous_scale="Rainbow",
+                            title="Key Terms/Topics Extracted from Job Description",
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+
+            avs.add_vertical_space(2)
+            st.markdown("#### Similarity Score")
+            print("Config file parsed successfully:")
+            resume_string = " ".join(selected_file["extracted_keywords"])
+            jd_string = " ".join(selected_jd["extracted_keywords"])
+            result = get_score(resume_string, jd_string)
+            similarity_score = round(result[0].score * 100, 2)
+
+            # Default color to green
+            score_color = "green"
+            if similarity_score < 60:
+                score_color = "red"
+            elif 60 <= similarity_score < 75:
+                score_color = "orange"
+
+            st.markdown(
+                f"Similarity Score obtained for the resume and job description is "
+                f'<span style="color:{score_color};font-size:24px; font-weight:Bold">{similarity_score}</span>',
+                unsafe_allow_html=True,
+            )
+
+            avs.add_vertical_space(2)
+            with st.expander("Common words between Resume and Job Description:"):
+                annotated_text(
+                    create_annotated_text(
+                        selected_file["clean_data"],
+                        selected_jd["extracted_keywords"],
+                        "JD",
+                        "#F24C3D",
+                    )
+                )
+
+    st.divider()
+
+    # Go back to top
+    st.markdown("[:arrow_up: Back to Top](#resume-matcher)")
+    return
+
+
+
+if __name__ == '__main__':
+    # Opening ngrok connection
+    #ngrok.set_auth_token("2kV5XGGcB7chts9QMlxMyV1Ll26_3qNpAqYPL47sSu9dbSTUr")
+    #tunnel = ngrok.connect(name="legible-bison-slowly")
+    #public_url = ngrok.connect(8501)
+    #legible-bison-slowly
+    #print(public_url)
+
+    # Cleanup processed resume / job descriptions
+    delete_from_dir(os.path.join(cwd, "Data", "Processed", "Resumes"))
+    delete_from_dir(os.path.join(cwd, "Data", "Processed", "JobDescription"))
+
+    # Set default session states for first run
+    if "resumeUploaded" not in st.session_state.keys():
+        update_session_state("resumeUploaded", "Pending")
+        update_session_state("resumePath", "")
+    if "jobDescriptionUploaded" not in st.session_state.keys():
+        update_session_state("jobDescriptionUploaded", "Pending")
+        update_session_state("jobDescriptionPath", "")
+
+    try:
+        main()
+    finally:
+        print("Exiting")
+        #print(" Shutting down Ngrok server.")
+        #ngrok.kill()
