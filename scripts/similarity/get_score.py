@@ -46,8 +46,7 @@ def find_path(folder_name):
 
 cwd = find_path("Resume-Matcher")
 READ_RESUME_FROM = os.path.join(cwd, "Data", "Processed", "Resumes")
-READ_JOB_DESCRIPTION_FROM = os.path.join(
-    cwd, "Data", "Processed", "JobDescription")
+READ_JOB_DESCRIPTION_FROM = os.path.join(cwd, "Data", "Processed", "JobDescription")
 config_path = os.path.join(cwd, "scripts", "similarity")
 
 

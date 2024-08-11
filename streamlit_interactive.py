@@ -304,8 +304,7 @@ with st.container():
                         icon="✔️",
                     )
                     update_session_state("jobDescriptionUploaded", "Uploaded")
-                    update_session_state(
-                        "jobDescriptionPath", save_path_jobDescription)
+                    update_session_state("jobDescriptionPath", save_path_jobDescription)
         else:
             update_session_state("jobDescriptionUploaded", "Pending")
             update_session_state("jobDescriptionPath", "")
@@ -318,8 +317,7 @@ with st.spinner("Please wait..."):
         and st.session_state["jobDescriptionUploaded"] == "Uploaded"
     ):
 
-        resumeProcessor = ParseResume(
-            read_single_pdf(st.session_state["resumePath"]))
+        resumeProcessor = ParseResume(read_single_pdf(st.session_state["resumePath"]))
         jobDescriptionProcessor = ParseJobDesc(
             read_single_pdf(st.session_state["jobDescriptionPath"])
         )
@@ -393,8 +391,7 @@ with st.spinner("Please wait..."):
                     )
 
                     # Call the function with your data
-                    create_star_graph(
-                        selected_file["keyterms"], "Entities from Resume")
+                    create_star_graph(selected_file["keyterms"], "Entities from Resume")
             with jobDescriptionCol:
                 with st.expander("Extracted Entities"):
                     st.write(

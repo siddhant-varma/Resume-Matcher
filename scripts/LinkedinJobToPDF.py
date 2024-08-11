@@ -23,8 +23,7 @@ def linkedin_to_pdf(job_url: str):
 
     job_path = "Data/JobDescription/"
     job_description = ""
-    files_number = len([f for f in listdir(job_path)
-                       if isfile(join(job_path, f))])
+    files_number = len([f for f in listdir(job_path) if isfile(join(job_path, f))])
 
     try:
         page = requests.get(job_url)
@@ -45,8 +44,7 @@ def linkedin_to_pdf(job_url: str):
         organization_element = soup.find("span", {"class": "topcard__flavor"})
 
         if not organization_element:
-            organization_element = soup.find(
-                "a", {"class": "topcard__org-name-link"})
+            organization_element = soup.find("a", {"class": "topcard__org-name-link"})
 
         # Extract the organization name
         organization = organization_element.text.strip()
@@ -77,6 +75,5 @@ def linkedin_to_pdf(job_url: str):
 
 
 if __name__ == "__main__":
-    url = easygui.enterbox(
-        "Enter the URL of the LinkedIn Job Posting:").strip()
+    url = easygui.enterbox("Enter the URL of the LinkedIn Job Posting:").strip()
     linkedin_to_pdf(url)

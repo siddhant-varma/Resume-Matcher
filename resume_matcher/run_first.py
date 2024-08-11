@@ -38,8 +38,7 @@ def process_files(data_path, processed_path, file_type):
         file_names = get_filenames_from_dir(data_path)
         logging.info(f"Reading from {data_path} is now complete.")
     except:
-        logging.error(
-            f"There are no {file_type}s present in the specified folder.")
+        logging.error(f"There are no {file_type}s present in the specified folder.")
         logging.error("Exiting from the program.")
         logging.error(
             f"Please add {file_type}s in the {data_path} folder and try again."

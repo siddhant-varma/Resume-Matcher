@@ -15,8 +15,7 @@ logger.setLevel(logging.INFO)
 
 cwd = find_path("Resume-Matcher")
 READ_RESUME_FROM = os.path.join(cwd, "Data", "Processed", "Resumes/")
-READ_JOB_DESCRIPTION_FROM = os.path.join(
-    cwd, "Data", "Processed", "JobDescription/")
+READ_JOB_DESCRIPTION_FROM = os.path.join(cwd, "Data", "Processed", "JobDescription/")
 
 
 def get_score(resume_string, job_description_string):

@@ -12,8 +12,7 @@ SAVE_DIRECTORY = "Data/Processed/JobDescription"
 class JobDescriptionProcessor:
     def __init__(self, input_file):
         self.input_file = input_file
-        self.input_file_name = os.path.join(
-            READ_JOB_DESCRIPTION_FROM + self.input_file)
+        self.input_file_name = os.path.join(READ_JOB_DESCRIPTION_FROM + self.input_file)
 
     def process(self) -> bool:
         try:

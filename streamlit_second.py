@@ -232,8 +232,7 @@ fig = go.Figure(
                 values=["Keyword", "Value"], font=dict(size=12), fill_color="#070A52"
             ),
             cells=dict(
-                values=[list(keyword_dict.keys()),
-                        list(keyword_dict.values())],
+                values=[list(keyword_dict.keys()), list(keyword_dict.values())],
                 line_color="darkslategray",
                 fill_color="#6DA9E4",
             ),
@@ -302,8 +301,7 @@ fig = go.Figure(
                 values=["Keyword", "Value"], font=dict(size=12), fill_color="#070A52"
             ),
             cells=dict(
-                values=[list(keyword_dict.keys()),
-                        list(keyword_dict.values())],
+                values=[list(keyword_dict.keys()), list(keyword_dict.values())],
                 line_color="darkslategray",
                 fill_color="#6DA9E4",
             ),

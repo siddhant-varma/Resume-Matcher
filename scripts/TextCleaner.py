@@ -8,8 +8,7 @@ from nltk.tokenize import word_tokenize
 
 class TextCleaner:
     def __init__(self, raw_text):
-        self.stopwords_set = set(stopwords.words(
-            "english") + list(string.punctuation))
+        self.stopwords_set = set(stopwords.words("english") + list(string.punctuation))
         self.lemmatizer = WordNetLemmatizer()
         self.raw_input_text = raw_text
 
