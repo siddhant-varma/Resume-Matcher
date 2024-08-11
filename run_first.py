@@ -35,6 +35,8 @@ logging.info("Started to read from Data/Resumes")
 try:
     # Check if there are resumes present or not.
     # If present then parse it.
+    if not os.path.isdir(PROCESSED_RESUMES_PATH):
+        os.makedirs(PROCESSED_RESUMES_PATH)
     remove_old_files(PROCESSED_RESUMES_PATH)
 
     file_names = get_filenames_from_dir("Data/Resumes")
@@ -57,6 +59,8 @@ logging.info("Started to read from Data/JobDescription")
 try:
     # Check if there are resumes present or not.
     # If present then parse it.
+    if not os.path.isdir(PROCESSED_JOB_DESCRIPTIONS_PATH):
+        os.makedirs(PROCESSED_JOB_DESCRIPTIONS_PATH)
     remove_old_files(PROCESSED_JOB_DESCRIPTIONS_PATH)
 
     file_names = get_filenames_from_dir("Data/JobDescription")
