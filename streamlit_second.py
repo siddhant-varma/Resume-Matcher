@@ -11,6 +11,7 @@ from annotated_text import annotated_text, parameters
 from streamlit_extras import add_vertical_space as avs
 from streamlit_extras.badges import badge
 
+
 from scripts.utils import get_filenames_from_dir
 
 # Set page configuration
@@ -181,6 +182,7 @@ avs.add_vertical_space(1)
 
 resume_names = get_filenames_from_dir("Data/Processed/Resumes")
 
+##################################################
 output = st.selectbox(
     f"There are {len(resume_names)} resumes present. Please select one from the menu below:",
     resume_names,
@@ -254,6 +256,7 @@ st.write(fig)
 
 avs.add_vertical_space(5)
 
+#######################
 job_descriptions = get_filenames_from_dir("Data/Processed/JobDescription")
 
 output = st.selectbox(

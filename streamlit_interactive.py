@@ -2,6 +2,8 @@
 import json
 import os
 from typing import List
+import traceback
+import logging
 
 import networkx as nx
 import nltk
@@ -13,7 +15,7 @@ from annotated_text import annotated_text, parameters
 from streamlit_extras import add_vertical_space as avs
 from streamlit_extras.badges import badge
 
-#from pyngrok import ngrok
+# from pyngrok import ngrok
 
 from scripts import JobDescriptionProcessor, ResumeProcessor
 from scripts.parsers import ParseJobDesc, ParseResume
@@ -227,35 +229,60 @@ def tokenize_string(input_string):
     tokens = nltk.word_tokenize(input_string)
     return tokens
 
-#defining main function for execution
+
+# defining main function for execution
 def main():
     # Display the main title and sub-headers
     st.title(":blue[Resume Matcher]")
-    with st.sidebar:
-        st.image("Assets/img/header_image.png")
-        st.subheader(
-            "Free and Open Source ATS to help your resume pass the screening stage."
-        )
-        st.markdown(
-            "Check the website [www.resumematcher.fyi](https://www.resumematcher.fyi/)"
-        )
-        st.markdown(
-            "Give Resume Matcher a ⭐ on [GitHub](https://github.com/srbhr/resume-matcher)"
-        )
-        badge(type="github", name="srbhr/Resume-Matcher")
-        st.markdown("For updates follow me on Twitter.")
-        badge(type="twitter", name="_srbhr_")
-        st.markdown(
-            "If you like the project and would like to further help in development please consider 👇"
-        )
-        badge(type="buymeacoffee", name="srbhr")
+    
+    #Detail visible in sidebar
+    # with st.sidebar:
+    #     st.image("Assets/img/header_image.png")
+    #     st.subheader(
+    #         "Free and Open Source ATS to help your resume pass the screening stage."
+    #     )
+    #     st.markdown(
+    #         "Check the website [www.resumematcher.fyi](https://www.resumematcher.fyi/)"
+    #     )
+    #     st.markdown(
+    #         "Give Resume Matcher a ⭐ on [GitHub](https://github.com/srbhr/resume-matcher)"
+    #     )
+    #     badge(type="github", name="srbhr/Resume-Matcher")
+    #     st.markdown("For updates follow me on Twitter.")
+    #     badge(type="twitter", name="_srbhr_")
+    #     st.markdown(
+    #         "If you like the project and would like to further help in development please consider 👇"
+    #     )
+    #     badge(type="buymeacoffee", name="srbhr")
 
     st.divider()
     avs.add_vertical_space(1)
 
+    resume_names = get_filenames_from_dir("Data/Resumes")
+    job_descriptions = get_filenames_from_dir("Data/Processed/JobDescription")
+
     with st.container():
         resumeCol, jobDescriptionCol = st.columns(2)
         with resumeCol:
+            #Option for selecting from existing resumes
+
+            output = st.selectbox(
+                f"There are {len(resume_names)} resumes present. Please select one from the menu below:",
+                resume_names,
+            )
+            avs.add_vertical_space(5)
+            update_session_state("resumeUploaded", "Uploaded")
+            save_path_resume = os.path.join(
+                cwd, "Data", "Resumes", output
+            )
+            print(save_path_resume)
+            update_session_state("resumePath", save_path_resume)
+
+            #selected_file = read_json("Data/Processed/Resumes/" + output)
+
+            avs.add_vertical_space(2)
+            uploaded_Resume = True
+            #Option for uploading resume
             uploaded_Resume = st.file_uploader("Choose a Resume", type="pdf")
             if uploaded_Resume is not None:
                 if st.session_state["resumeUploaded"] == "Pending":
@@ -268,15 +295,29 @@ def main():
 
                     if os.path.exists(save_path_resume):
                         st.toast(
-                            f"File {uploaded_Resume.name} is successfully saved!", icon="✔️"
+                            f"File {uploaded_Resume.name} is successfully saved!",
+                            icon="✔️",
                         )
                         update_session_state("resumeUploaded", "Uploaded")
                         update_session_state("resumePath", save_path_resume)
-            else:
-                update_session_state("resumeUploaded", "Pending")
-                update_session_state("resumePath", "")
+            # else:
+            #     update_session_state("resumeUploaded", "Pending")
+            #     update_session_state("resumePath", "")
 
         with jobDescriptionCol:
+            #Option for selecting job description from existing ones
+
+            output = st.selectbox(
+                f"There are {len(job_descriptions)} job descriptions present. Please select one from the menu below:",
+                job_descriptions,
+            )            
+            avs.add_vertical_space(5)
+
+            selected_jd = read_json("Data/Processed/JobDescription/" + output)
+
+            avs.add_vertical_space(2)
+            
+            #Option for uploading job description
             uploaded_JobDescription = st.file_uploader(
                 "Choose a Job Description", type="pdf"
             )
@@ -295,20 +336,25 @@ def main():
                             icon="✔️",
                         )
                         update_session_state("jobDescriptionUploaded", "Uploaded")
-                        update_session_state("jobDescriptionPath", save_path_jobDescription)
+                        update_session_state(
+                            "jobDescriptionPath", save_path_jobDescription
+                        )
+                        print(save_path_jobDescription)
             else:
                 update_session_state("jobDescriptionUploaded", "Pending")
                 update_session_state("jobDescriptionPath", "")
 
     with st.spinner("Please wait..."):
         if (
-            uploaded_Resume is not None
-            and st.session_state["jobDescriptionUploaded"] == "Uploaded"
-            and uploaded_JobDescription is not None
+            # uploaded_Resume is not None and
+            st.session_state["resumeUploaded"] == "Uploaded"
+            #and uploaded_JobDescription is not None
             and st.session_state["jobDescriptionUploaded"] == "Uploaded"
         ):
 
-            resumeProcessor = ParseResume(read_single_pdf(st.session_state["resumePath"]))
+            resumeProcessor = ParseResume(
+                read_single_pdf(st.session_state["resumePath"])
+            )
             jobDescriptionProcessor = ParseJobDesc(
                 read_single_pdf(st.session_state["jobDescriptionPath"])
             )
@@ -382,7 +428,9 @@ def main():
                         )
 
                         # Call the function with your data
-                        create_star_graph(selected_file["keyterms"], "Entities from Resume")
+                        create_star_graph(
+                            selected_file["keyterms"], "Entities from Resume"
+                        )
                 with jobDescriptionCol:
                     with st.expander("Extracted Entities"):
                         st.write(
@@ -524,18 +572,17 @@ def main():
     return
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Opening ngrok connection
-    #ngrok.set_auth_token("2kV5XGGcB7chts9QMlxMyV1Ll26_3qNpAqYPL47sSu9dbSTUr")
-    #tunnel = ngrok.connect(name="legible-bison-slowly")
-    #public_url = ngrok.connect(8501)
-    #legible-bison-slowly
-    #print(public_url)
+    # ngrok.set_auth_token("2kV5XGGcB7chts9QMlxMyV1Ll26_3qNpAqYPL47sSu9dbSTUr")
+    # tunnel = ngrok.connect(name="legible-bison-slowly")
+    # public_url = ngrok.connect(8501)
+    # legible-bison-slowly
+    # print(public_url)
 
     # Cleanup processed resume / job descriptions
-    delete_from_dir(os.path.join(cwd, "Data", "Processed", "Resumes"))
-    delete_from_dir(os.path.join(cwd, "Data", "Processed", "JobDescription"))
+    #delete_from_dir(os.path.join(cwd, "Data", "Processed", "Resumes"))
+    #delete_from_dir(os.path.join(cwd, "Data", "Processed", "JobDescription"))
 
     # Set default session states for first run
     if "resumeUploaded" not in st.session_state.keys():
@@ -547,7 +594,9 @@ if __name__ == '__main__':
 
     try:
         main()
-    finally:
-        print("Exiting")
-        #print(" Shutting down Ngrok server.")
-        #ngrok.kill()
+    except Exception as e:
+        logging.error(traceback.format_exc())
+    #finally:
+        #print("Exiting")
+        # print(" Shutting down Ngrok server.")
+        # ngrok.kill()
