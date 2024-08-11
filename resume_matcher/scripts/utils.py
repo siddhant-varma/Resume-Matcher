@@ -11,9 +11,9 @@ logger = logging.getLogger(__name__)
 
 
 def find_path(folder_name):
-    """
-    The function `find_path` searches for a folder by name starting from the current directory and
-    traversing up the directory tree until the folder is found or the root directory is reached.
+    """The function `find_path` searches for a folder by name starting from the
+    current directory and traversing up the directory tree until the folder is
+    found or the root directory is reached.
 
     Args:
       folder_name: The `find_path` function you provided is designed to search for a folder by name
@@ -39,9 +39,9 @@ def find_path(folder_name):
 
 
 def read_json(path):
-    """
-    The `read_json` function reads a JSON file from the specified path and returns its contents, handling
-    any exceptions that may occur during the process.
+    """The `read_json` function reads a JSON file from the specified path and
+    returns its contents, handling any exceptions that may occur during the
+    process.
 
     Args:
       path: The `path` parameter in the `read_doc` function is a string that represents the file path to
@@ -63,8 +63,8 @@ def read_json(path):
 
 
 def read_multiple_pdf(file_path: str) -> list:
-    """
-    Read multiple PDF files from the specified file path and extract the text from each page.
+    """Read multiple PDF files from the specified file path and extract the
+    text from each page.
 
     Args:
         file_path (str): The directory path containing the PDF files.
@@ -88,8 +88,7 @@ def read_multiple_pdf(file_path: str) -> list:
 
 
 def read_single_pdf(file_path: str) -> str:
-    """
-    Read a single PDF file and extract the text from each page.
+    """Read a single PDF file and extract the text from each page.
 
     Args:
         file_path (str): The path of the PDF file.
@@ -111,8 +110,7 @@ def read_single_pdf(file_path: str) -> str:
 
 
 def get_pdf_files(file_path: str) -> list:
-    """
-    Get a list of PDF files from the specified directory path.
+    """Get a list of PDF files from the specified directory path.
 
     Args:
         file_path (str): The directory path containing the PDF files.
@@ -129,8 +127,7 @@ def get_pdf_files(file_path: str) -> list:
 
 
 def generate_unique_id():
-    """
-    Generate a unique ID and return it as a string.
+    """Generate a unique ID and return it as a string.
 
     Returns:
         str: A string with a unique ID.

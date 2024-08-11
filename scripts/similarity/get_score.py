@@ -17,9 +17,9 @@ logger.setLevel(logging.INFO)
 
 
 def find_path(folder_name):
-    """
-    The function `find_path` searches for a folder by name starting from the current directory and
-    traversing up the directory tree until the folder is found or the root directory is reached.
+    """The function `find_path` searches for a folder by name starting from the
+    current directory and traversing up the directory tree until the folder is
+    found or the root directory is reached.
 
     Args:
       folder_name: The `find_path` function you provided is designed to search for a folder by name
@@ -46,14 +46,14 @@ def find_path(folder_name):
 
 cwd = find_path("Resume-Matcher")
 READ_RESUME_FROM = os.path.join(cwd, "Data", "Processed", "Resumes")
-READ_JOB_DESCRIPTION_FROM = os.path.join(cwd, "Data", "Processed", "JobDescription")
+READ_JOB_DESCRIPTION_FROM = os.path.join(
+    cwd, "Data", "Processed", "JobDescription")
 config_path = os.path.join(cwd, "scripts", "similarity")
 
 
 def read_config(filepath):
-    """
-    The `read_config` function reads a configuration file in YAML format and handles exceptions related
-    to file not found or parsing errors.
+    """The `read_config` function reads a configuration file in YAML format and
+    handles exceptions related to file not found or parsing errors.
 
     Args:
       filepath: The `filepath` parameter in the `read_config` function is a string that represents the
@@ -81,9 +81,9 @@ def read_config(filepath):
 
 
 def read_doc(path):
-    """
-    The `read_doc` function reads a JSON file from the specified path and returns its contents, handling
-    any exceptions that may occur during the process.
+    """The `read_doc` function reads a JSON file from the specified path and
+    returns its contents, handling any exceptions that may occur during the
+    process.
 
     Args:
       path: The `path` parameter in the `read_doc` function is a string that represents the file path to
@@ -105,9 +105,8 @@ def read_doc(path):
 
 
 def get_score(resume_string, job_description_string):
-    """
-    The function `get_score` uses QdrantClient to calculate the similarity score between a resume and a
-    job description.
+    """The function `get_score` uses QdrantClient to calculate the similarity
+    score between a resume and a job description.
 
     Args:
       resume_string: The `resume_string` parameter is a string containing the text of a resume. It

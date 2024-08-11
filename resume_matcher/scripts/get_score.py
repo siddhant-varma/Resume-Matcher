@@ -15,13 +15,13 @@ logger.setLevel(logging.INFO)
 
 cwd = find_path("Resume-Matcher")
 READ_RESUME_FROM = os.path.join(cwd, "Data", "Processed", "Resumes/")
-READ_JOB_DESCRIPTION_FROM = os.path.join(cwd, "Data", "Processed", "JobDescription/")
+READ_JOB_DESCRIPTION_FROM = os.path.join(
+    cwd, "Data", "Processed", "JobDescription/")
 
 
 def get_score(resume_string, job_description_string):
-    """
-    The function `get_score` uses QdrantClient to calculate the similarity score between a resume and a
-    job description.
+    """The function `get_score` uses QdrantClient to calculate the similarity
+    score between a resume and a job description.
 
     Args:
       resume_string: The `resume_string` parameter is a string containing the text of a resume. It

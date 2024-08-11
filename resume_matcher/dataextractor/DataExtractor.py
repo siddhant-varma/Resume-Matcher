@@ -42,13 +42,10 @@ RESUME_SECTIONS = [
 
 
 class DataExtractor:
-    """
-    A class for extracting various types of data from text.
-    """
+    """A class for extracting various types of data from text."""
 
     def __init__(self, raw_text: str):
-        """
-        Initialize the DataExtractor object.
+        """Initialize the DataExtractor object.
 
         Args:
             raw_text (str): The raw input text.
@@ -59,8 +56,7 @@ class DataExtractor:
         self.doc = nlp(self.clean_text)
 
     def extract_links(self):
-        """
-        Find links of any type in a given string.
+        """Find links of any type in a given string.
 
         Args:
             text (str): The string to search for links.
@@ -73,9 +69,8 @@ class DataExtractor:
         return links
 
     def extract_links_extended(self):
-        """
-        Extract links of all kinds (HTTP, HTTPS, FTP, email, www.linkedin.com,
-          and github.com/user_name) from a webpage.
+        """Extract links of all kinds (HTTP, HTTPS, FTP, email,
+        www.linkedin.com, and github.com/user_name) from a webpage.
 
         Args:
             url (str): The URL of the webpage.
@@ -107,8 +102,8 @@ class DataExtractor:
         return links
 
     def extract_names(self):
-        """Extracts and returns a list of names from the given
-        text using spaCy's named entity recognition.
+        """Extracts and returns a list of names from the given text using
+        spaCy's named entity recognition.
 
         Args:
             text (str): The text to extract names from.
@@ -120,8 +115,7 @@ class DataExtractor:
         return names
 
     def extract_emails(self):
-        """
-        Extract email addresses from a given string.
+        """Extract email addresses from a given string.
 
         Args:
             text (str): The string from which to extract email addresses.
@@ -134,8 +128,7 @@ class DataExtractor:
         return emails
 
     def extract_phone_numbers(self):
-        """
-        Extract phone numbers from a given string.
+        """Extract phone numbers from a given string.
 
         Args:
             text (str): The string from which to extract phone numbers.
@@ -150,8 +143,8 @@ class DataExtractor:
         return phone_numbers
 
     def extract_experience(self):
-        """
-        Extract experience from a given string. It does so by using the Spacy module.
+        """Extract experience from a given string. It does so by using the
+        Spacy module.
 
         Args:
             text (str): The string from which to extract experience.
@@ -175,8 +168,7 @@ class DataExtractor:
         return " ".join(experience_section)
 
     def extract_position_year(self):
-        """
-        Extract position and year from a given string.
+        """Extract position and year from a given string.
 
         Args:
             text (str): The string from which to extract position and year.
@@ -191,8 +183,7 @@ class DataExtractor:
         return position_year
 
     def extract_particular_words(self):
-        """
-        Extract nouns and proper nouns from the given text.
+        """Extract nouns and proper nouns from the given text.
 
         Args:
             text (str): The input text to extract nouns from.
@@ -205,8 +196,8 @@ class DataExtractor:
         return nouns
 
     def extract_entities(self):
-        """
-        Extract named entities of types 'GPE' (geopolitical entity) and 'ORG' (organization) from the given text.
+        """Extract named entities of types 'GPE' (geopolitical entity) and
+        'ORG' (organization) from the given text.
 
         Args:
             text (str): The input text to extract entities from.

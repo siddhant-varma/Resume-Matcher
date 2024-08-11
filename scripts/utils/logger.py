@@ -4,9 +4,8 @@ import logging
 def get_handlers(
     filename="app.log", mode="w", file_level=logging.DEBUG, stderr_level=logging.DEBUG
 ):
-    """
-    The function `get_handlers` returns a stream handler and a file handler with specified logging
-    levels and formatters.
+    """The function `get_handlers` returns a stream handler and a file handler
+    with specified logging levels and formatters.
 
     Args:
       filename: The `filename` parameter is the name of the log file where the log messages will be
@@ -42,8 +41,8 @@ def get_handlers(
 
 
 class CustomFormatter(logging.Formatter):
-    """
-    A custom log formatter that adds color to log messages based on the log level.
+    """A custom log formatter that adds color to log messages based on the log
+    level.
 
     Args:
         file (bool): Indicates whether the log is being written to a file. Default is False.
@@ -53,13 +52,11 @@ class CustomFormatter(logging.Formatter):
 
     Methods:
         format(record): Formats the log record with the appropriate colorized log message format.
-
     """
 
     def __init__(self, file=False):
-        """
-        This function initializes logging formats with different colors and styles based on the log
-        level.
+        """This function initializes logging formats with different colors and
+        styles based on the log level.
 
         Args:
           file: The `file` parameter in the `__init__` method is a boolean flag that determines whether
@@ -85,15 +82,14 @@ class CustomFormatter(logging.Formatter):
         }
 
     def format(self, record):
-        """
-        Formats the log record with the appropriate colorized log message format.
+        """Formats the log record with the appropriate colorized log message
+        format.
 
         Args:
             record (LogRecord): The log record to be formatted.
 
         Returns:
             str: The formatted log message.
-
         """
         log_fmt = self.FORMATS.get(record.levelno)
         formatter = logging.Formatter(log_fmt)
@@ -107,9 +103,9 @@ def init_logging_config(
     file_level=logging.DEBUG,
     stderr_level=logging.DEBUG,
 ):
-    """
-    The function `init_logging_config` initializes logging configuration in Python by setting basic log
-    level, configuring handlers, and adding them to the logger.
+    """The function `init_logging_config` initializes logging configuration in
+    Python by setting basic log level, configuring handlers, and adding them to
+    the logger.
 
     Args:
       basic_log_level: The `basic_log_level` parameter is used to set the logging level for the root

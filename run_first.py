@@ -43,7 +43,8 @@ except:
     # Exit the program if there are no resumes.
     logging.error("There are no resumes present in the specified folder.")
     logging.error("Exiting from the program.")
-    logging.error("Please add resumes in the Data/Resumes folder and try again.")
+    logging.error(
+        "Please add resumes in the Data/Resumes folder and try again.")
     exit(1)
 
 # Now after getting the file_names parse the resumes into a JSON Format.
@@ -63,9 +64,11 @@ try:
     logging.info("Reading from Data/JobDescription is now complete.")
 except:
     # Exit the program if there are no resumes.
-    logging.error("There are no job-description present in the specified folder.")
+    logging.error(
+        "There are no job-description present in the specified folder.")
     logging.error("Exiting from the program.")
-    logging.error("Please add resumes in the Data/JobDescription folder and try again.")
+    logging.error(
+        "Please add resumes in the Data/JobDescription folder and try again.")
     exit(1)
 
 # Now after getting the file_names parse the resumes into a JSON Format.

@@ -1,6 +1,6 @@
 from resume_matcher.dataextractor.DataExtractor import DataExtractor
 from resume_matcher.dataextractor.KeyTermExtractor import KeytermExtractor
-from resume_matcher.dataextractor.TextCleaner import TextCleaner, CountFrequency
+from resume_matcher.dataextractor.TextCleaner import CountFrequency, TextCleaner
 from resume_matcher.scripts.utils import generate_unique_id
 
 
@@ -15,9 +15,12 @@ class ParseDocumentToJson:
         self.doc_type = doc_type
         self.clean_data = TextCleaner.clean_text(self.doc_data)
         self.entities = DataExtractor(self.clean_data).extract_entities()
-        self.key_words = DataExtractor(self.clean_data).extract_particular_words()
-        self.pos_frequencies = CountFrequency(self.clean_data).count_frequency()
-        self.keyterms = KeytermExtractor(self.clean_data).get_keyterms_based_on_sgrank()
+        self.key_words = DataExtractor(
+            self.clean_data).extract_particular_words()
+        self.pos_frequencies = CountFrequency(
+            self.clean_data).count_frequency()
+        self.keyterms = KeytermExtractor(
+            self.clean_data).get_keyterms_based_on_sgrank()
         self.bi_grams = KeytermExtractor(self.clean_data).bi_gramchunker()
         self.tri_grams = KeytermExtractor(self.clean_data).tri_gramchunker()
         if self.doc_type == "resume":

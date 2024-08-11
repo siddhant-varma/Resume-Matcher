@@ -3,25 +3,23 @@ from textacy import extract
 
 
 class KeytermExtractor:
-    """
-    A class for extracting keyterms from a given text using various algorithms.
-    """
+    """A class for extracting keyterms from a given text using various
+    algorithms."""
 
     def __init__(self, raw_text: str, top_n_values: int = 20):
-        """
-        Initialize the KeytermExtractor object.
+        """Initialize the KeytermExtractor object.
 
         Args:
             raw_text (str): The raw input text.
             top_n_values (int): The number of top keyterms to extract.
         """
         self.raw_text = raw_text
-        self.text_doc = textacy.make_spacy_doc(self.raw_text, lang="en_core_web_md")
+        self.text_doc = textacy.make_spacy_doc(
+            self.raw_text, lang="en_core_web_md")
         self.top_n_values = top_n_values
 
     def get_keyterms_based_on_textrank(self):
-        """
-        Extract keyterms using the TextRank algorithm.
+        """Extract keyterms using the TextRank algorithm.
 
         Returns:
             List[str]: A list of top keyterms based on TextRank.
@@ -33,8 +31,7 @@ class KeytermExtractor:
         )
 
     def get_keyterms_based_on_sgrank(self):
-        """
-        Extract keyterms using the SGRank algorithm.
+        """Extract keyterms using the SGRank algorithm.
 
         Returns:
             List[str]: A list of top keyterms based on SGRank.
@@ -46,8 +43,7 @@ class KeytermExtractor:
         )
 
     def get_keyterms_based_on_scake(self):
-        """
-        Extract keyterms using the sCAKE algorithm.
+        """Extract keyterms using the sCAKE algorithm.
 
         Returns:
             List[str]: A list of top keyterms based on sCAKE.
@@ -59,8 +55,7 @@ class KeytermExtractor:
         )
 
     def get_keyterms_based_on_yake(self):
-        """
-        Extract keyterms using the YAKE algorithm.
+        """Extract keyterms using the YAKE algorithm.
 
         Returns:
             List[str]: A list of top keyterms based on YAKE.
@@ -72,8 +67,7 @@ class KeytermExtractor:
         )
 
     def bi_gramchunker(self):
-        """
-        Chunk the text into bigrams.
+        """Chunk the text into bigrams.
 
         Returns:
             List[str]: A list of bigrams.
@@ -89,8 +83,7 @@ class KeytermExtractor:
         )
 
     def tri_gramchunker(self):
-        """
-        Chunk the text into trigrams.
+        """Chunk the text into trigrams.
 
         Returns:
             List[str]: A list of trigrams.

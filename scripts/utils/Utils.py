@@ -14,8 +14,7 @@ REGEX_PATTERNS = {
 
 
 def generate_unique_id():
-    """
-    Generate a unique ID and return it as a string.
+    """Generate a unique ID and return it as a string.
 
     Returns:
         str: A string with a unique ID.
@@ -24,13 +23,10 @@ def generate_unique_id():
 
 
 class TextCleaner:
-    """
-    A class for cleaning a text by removing specific patterns.
-    """
+    """A class for cleaning a text by removing specific patterns."""
 
     def remove_emails_links(text):
-        """
-        Clean the input text by removing specific patterns.
+        """Clean the input text by removing specific patterns.
 
         Args:
             text (str): The input text to clean.
@@ -43,8 +39,7 @@ class TextCleaner:
         return text
 
     def clean_text(text):
-        """
-        Clean the input text by removing specific patterns.
+        """Clean the input text by removing specific patterns.
 
         Args:
             text (str): The input text to clean.
@@ -60,8 +55,7 @@ class TextCleaner:
         return str(text)
 
     def remove_stopwords(text):
-        """
-        Clean the input text by removing stopwords.
+        """Clean the input text by removing stopwords.
 
         Args:
             text (str): The input text to clean.
@@ -77,14 +71,12 @@ class TextCleaner:
 
 
 class CountFrequency:
-
     def __init__(self, text):
         self.text = text
         self.doc = nlp(text)
 
     def count_frequency(self):
-        """
-        Count the frequency of words in the input text.
+        """Count the frequency of words in the input text.
 
         Returns:
             dict: A dictionary with the words as keys and the frequency as values.

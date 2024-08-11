@@ -5,8 +5,7 @@ from pypdf import PdfReader
 
 
 def get_pdf_files(file_path):
-    """
-    Get all PDF files from the specified file path.
+    """Get all PDF files from the specified file path.
 
     Args:
         file_path (str): The directory path containing the PDF files.
@@ -21,8 +20,8 @@ def get_pdf_files(file_path):
 
 
 def read_multiple_pdf(file_path: str) -> list:
-    """
-    Read multiple PDF files from the specified file path and extract the text from each page.
+    """Read multiple PDF files from the specified file path and extract the
+    text from each page.
 
     Args:
         file_path (str): The directory path containing the PDF files.
@@ -46,8 +45,7 @@ def read_multiple_pdf(file_path: str) -> list:
 
 
 def read_single_pdf(file_path: str) -> str:
-    """
-    Read a single PDF file and extract the text from each page.
+    """Read a single PDF file and extract the text from each page.
 
     Args:
         file_path (str): The path of the PDF file.
@@ -69,8 +67,7 @@ def read_single_pdf(file_path: str) -> str:
 
 
 def get_pdf_files(file_path: str) -> list:
-    """
-    Get a list of PDF files from the specified directory path.
+    """Get a list of PDF files from the specified directory path.
 
     Args:
         file_path (str): The directory path containing the PDF files.

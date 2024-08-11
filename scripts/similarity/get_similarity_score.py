@@ -19,8 +19,8 @@ stderr_handler, file_handler = get_handlers()
 
 
 def find_path(folder_name):
-    """
-    Find the path of a folder with the given name in the current directory or its parent directories.
+    """Find the path of a folder with the given name in the current directory
+    or its parent directories.
 
     Args:
         folder_name (str): The name of the folder to search for.
@@ -45,13 +45,14 @@ def find_path(folder_name):
 
 cwd = find_path("Resume-Matcher")
 READ_RESUME_FROM = os.path.join(cwd, "Data", "Processed", "Resumes")
-READ_JOB_DESCRIPTION_FROM = os.path.join(cwd, "Data", "Processed", "JobDescription")
+READ_JOB_DESCRIPTION_FROM = os.path.join(
+    cwd, "Data", "Processed", "JobDescription")
 config_path = os.path.join(cwd, "scripts", "similarity")
 
 
 def read_config(filepath):
-    """
-    Reads a configuration file in YAML format and returns the parsed configuration.
+    """Reads a configuration file in YAML format and returns the parsed
+    configuration.
 
     Args:
         filepath (str): The path to the configuration file.
@@ -63,7 +64,6 @@ def read_config(filepath):
         FileNotFoundError: If the configuration file is not found.
         yaml.YAMLError: If there is an error parsing the YAML in the configuration file.
         Exception: If there is an error reading the configuration file.
-
     """
     try:
         with open(filepath) as f:
@@ -81,8 +81,7 @@ def read_config(filepath):
 
 
 def read_doc(path):
-    """
-    Read a JSON file and return its contents as a dictionary.
+    """Read a JSON file and return its contents as a dictionary.
 
     Args:
         path (str): The path to the JSON file.
@@ -105,9 +104,8 @@ def read_doc(path):
 # This class likely performs searches based on quadrants.
 class QdrantSearch:
     def __init__(self, resumes, jd):
-        """
-        The function initializes various parameters and clients for processing resumes and job
-        descriptions.
+        """The function initializes various parameters and clients for
+        processing resumes and job descriptions.
 
         Args:
           resumes: The `resumes` parameter in the `__init__` method seems to be a list of resumes that
@@ -146,9 +144,9 @@ class QdrantSearch:
         self.logger.addHandler(file_handler)
 
     def get_embedding(self, text):
-        """
-        The function `get_embedding` takes a text input, generates embeddings using the Cohere API, and
-        returns the embeddings as a list of floats along with the length of the embeddings.
+        """The function `get_embedding` takes a text input, generates
+        embeddings using the Cohere API, and returns the embeddings as a list
+        of floats along with the length of the embeddings.
 
         Args:
           text: The `text` parameter in the `get_embedding` function is a string that represents the
@@ -167,10 +165,8 @@ class QdrantSearch:
             self.logger.error(f"Error getting embeddings: {e}", exc_info=True)
 
     def update_qdrant(self):
-        """
-        This Python function updates vectors and corresponding metadata in a Qdrant collection based on
-        resumes.
-        """
+        """This Python function updates vectors and corresponding metadata in a
+        Qdrant collection based on resumes."""
         vectors = []
         ids = []
         for i, resume in enumerate(self.resumes):
@@ -193,9 +189,8 @@ class QdrantSearch:
             )
 
     def search(self):
-        """
-        The `search` function retrieves search results based on a query vector using a specified
-        collection in a search engine.
+        """The `search` function retrieves search results based on a query
+        vector using a specified collection in a search engine.
 
         Returns:
           A list of dictionaries containing the text and score of the search results.
@@ -214,9 +209,8 @@ class QdrantSearch:
 
 
 def get_similarity_score(resume_string, job_description_string):
-    """
-    This Python function `get_similarity_score` calculates the similarity score between a resume and a
-    job description using QdrantSearch.
+    """This Python function `get_similarity_score` calculates the similarity
+    score between a resume and a job description using QdrantSearch.
 
     Args:
       resume_string: The `get_similarity_score` function seems to be using a `QdrantSearch` class to
