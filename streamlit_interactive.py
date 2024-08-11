@@ -259,7 +259,7 @@ def main():
     avs.add_vertical_space(1)
 
     resume_names = get_filenames_from_dir("Data/Resumes")
-    job_descriptions = get_filenames_from_dir("Data/Processed/JobDescription")
+    job_descriptions = get_filenames_from_dir("Data/JobDescription")
 
     with st.container():
         resumeCol, jobDescriptionCol = st.columns(2)
@@ -307,13 +307,18 @@ def main():
         with jobDescriptionCol:
             #Option for selecting job description from existing ones
 
-            output = st.selectbox(
+            selectedJobDescription = st.selectbox(
                 f"There are {len(job_descriptions)} job descriptions present. Please select one from the menu below:",
                 job_descriptions,
             )            
             avs.add_vertical_space(5)
-
-            selected_jd = read_json("Data/Processed/JobDescription/" + output)
+            update_session_state("jobDescriptionUploaded", "Uploaded")
+            save_path_jobDescription = os.path.join(
+                cwd, "Data", "JobDescription", selectedJobDescription
+            )
+            update_session_state(
+                "jobDescriptionPath", save_path_jobDescription
+            )
 
             avs.add_vertical_space(2)
             
@@ -340,9 +345,9 @@ def main():
                             "jobDescriptionPath", save_path_jobDescription
                         )
                         print(save_path_jobDescription)
-            else:
-                update_session_state("jobDescriptionUploaded", "Pending")
-                update_session_state("jobDescriptionPath", "")
+            # else:
+            #     update_session_state("jobDescriptionUploaded", "Pending")
+            #     update_session_state("jobDescriptionPath", "")
 
     with st.spinner("Please wait..."):
         if (
