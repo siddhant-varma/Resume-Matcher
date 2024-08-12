@@ -271,7 +271,8 @@ def main():
                 resume_names,
             )
             avs.add_vertical_space(5)
-            update_session_state("resumeUploaded", "Uploaded")
+            # update_session_state("resumeUploaded", "Uploaded")
+            update_session_state("resumePresent", "True")
             save_path_resume = os.path.join(cwd, "Data", "Resumes", output)
             print(save_path_resume)
             update_session_state("resumePath", save_path_resume)
@@ -279,7 +280,7 @@ def main():
             # selected_file = read_json("Data/Processed/Resumes/" + output)
 
             avs.add_vertical_space(2)
-            uploaded_Resume = True
+            # uploaded_Resume = True
             # Option for uploading resume
             uploaded_Resume = st.file_uploader("Choose a Resume", type="pdf")
             if uploaded_Resume is not None:
@@ -297,9 +298,10 @@ def main():
                             icon="✔️",
                         )
                         update_session_state("resumeUploaded", "Uploaded")
+                        update_session_state("resumePresent", "True")
                         update_session_state("resumePath", save_path_resume)
-            # else:
-            #     update_session_state("resumeUploaded", "Pending")
+            else:
+                update_session_state("resumeUploaded", "Pending")
             #     update_session_state("resumePath", "")
 
         with jobDescriptionCol:
@@ -348,7 +350,8 @@ def main():
     with st.spinner("Please wait..."):
         if (
             # uploaded_Resume is not None and
-            st.session_state["resumeUploaded"] == "Uploaded"
+            # st.session_state["resumeUploaded"] == "Uploaded"
+            st.session_state["resumePresent"] == "True"
             # and uploaded_JobDescription is not None
             and st.session_state["jobDescriptionUploaded"] == "Uploaded"
         ):
