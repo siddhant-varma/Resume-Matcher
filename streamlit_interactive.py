@@ -326,27 +326,27 @@ def main():
                 "Choose a Job Description", type="pdf"
             )
             if uploaded_JobDescription is not None:
-                if st.session_state["jobDescriptionUploaded"] == "Pending":
-                    save_path_jobDescription = os.path.join(
-                        cwd, "Data", "JobDescription", uploaded_JobDescription.name
+                # if st.session_state["jobDescriptionUploaded"] == "Pending":
+                save_path_jobDescription = os.path.join(
+                    cwd, "Data", "JobDescription", uploaded_JobDescription.name
+                )
+
+                with open(save_path_jobDescription, mode="wb") as w:
+                    w.write(uploaded_JobDescription.getvalue())
+
+                if os.path.exists(save_path_jobDescription):
+                    st.toast(
+                        f"File {uploaded_JobDescription.name} is successfully saved!",
+                        icon="✔️",
                     )
-
-                    with open(save_path_jobDescription, mode="wb") as w:
-                        w.write(uploaded_JobDescription.getvalue())
-
-                    if os.path.exists(save_path_jobDescription):
-                        st.toast(
-                            f"File {uploaded_JobDescription.name} is successfully saved!",
-                            icon="✔️",
-                        )
-                        update_session_state("jobDescriptionUploaded", "Uploaded")
-                        update_session_state("jobDescriptionPresent", "True")
-                        update_session_state(
-                            "jobDescriptionPath", save_path_jobDescription
-                        )
+                    update_session_state("jobDescriptionUploaded", "Uploaded")
+                    update_session_state("jobDescriptionPresent", "True")
+                    update_session_state(
+                        "jobDescriptionPath", save_path_jobDescription
+                    )
                         
-            else:
-                update_session_state("jobDescriptionUploaded", "Pending")
+            # else:
+            #     update_session_state("jobDescriptionUploaded", "Pending")
             #     update_session_state("jobDescriptionPath", "")
             print(save_path_jobDescription)
 
