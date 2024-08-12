@@ -274,7 +274,7 @@ def main():
             # update_session_state("resumeUploaded", "Uploaded")
             update_session_state("resumePresent", "True")
             save_path_resume = os.path.join(cwd, "Data", "Resumes", output)
-            print(save_path_resume)
+            
             update_session_state("resumePath", save_path_resume)
 
             # selected_file = read_json("Data/Processed/Resumes/" + output)
@@ -303,6 +303,7 @@ def main():
             else:
                 update_session_state("resumeUploaded", "Pending")
             #     update_session_state("resumePath", "")
+            print(save_path_resume)
 
         with jobDescriptionCol:
             # Option for selecting job description from existing ones
@@ -312,7 +313,7 @@ def main():
                 job_descriptions,
             )
             avs.add_vertical_space(5)
-            update_session_state("jobDescriptionUploaded", "Uploaded")
+            update_session_state("jobDescriptionPresent", "True")
             save_path_jobDescription = os.path.join(
                 cwd, "Data", "JobDescription", selectedJobDescription
             )
@@ -339,13 +340,15 @@ def main():
                             icon="✔️",
                         )
                         update_session_state("jobDescriptionUploaded", "Uploaded")
+                        update_session_state("jobDescriptionPresent", "True")
                         update_session_state(
                             "jobDescriptionPath", save_path_jobDescription
                         )
-                        print(save_path_jobDescription)
-            # else:
-            #     update_session_state("jobDescriptionUploaded", "Pending")
+                        
+            else:
+                update_session_state("jobDescriptionUploaded", "Pending")
             #     update_session_state("jobDescriptionPath", "")
+            print(save_path_jobDescription)
 
     with st.spinner("Please wait..."):
         if (
@@ -353,7 +356,7 @@ def main():
             # st.session_state["resumeUploaded"] == "Uploaded"
             st.session_state["resumePresent"] == "True"
             # and uploaded_JobDescription is not None
-            and st.session_state["jobDescriptionUploaded"] == "Uploaded"
+            and st.session_state["jobDescriptionPresent"] == "True"
         ):
 
             resumeProcessor = ParseResume(
